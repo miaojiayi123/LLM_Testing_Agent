@@ -1,6 +1,6 @@
 # 软件测试智能体 (Software Testing Agent)
 
-本项目是一个基于 \*\*DeepSeek LLM\*\* 的软件测试智能体（Software Testing Agent），能够自动分析 Python 被测程序、生成测试用例、执行测试、判定结果，并生成测试报告。
+本项目是一个基于 **DeepSeek LLM** 的软件测试智能体（Software Testing Agent），能够自动分析 Python 被测程序、生成测试用例、执行测试、判定结果，并生成测试报告。
 
 ---
 
@@ -8,34 +8,34 @@
 
 智能体功能包括：
 
-1. \*\*自动分析源码\*\*：读取被测程序并调用 LLM 分析功能和接口。
-2. \*\*自动生成测试用例\*\*：覆盖正常输入、边界条件、异常输入。
-3. \*\*自动执行测试用例\*\*：通过统一接口调用被测程序。
-4. \*\*自动判定结果\*\*：根据执行结果判定 PASS / FAIL / CRASH / TIMEOUT。
-5. \*\*自动生成报告\*\*：输出 Markdown 测试报告、失败用例 JSON，并可调用 LLM 分析失败原因。
+1. **自动分析源码**：读取被测程序并调用 LLM 分析功能和接口。
+2. **自动生成测试用例**：覆盖正常输入、边界条件、异常输入。
+3. **自动执行测试用例**：通过统一接口调用被测程序。
+4. **自动判定结果**：根据执行结果判定 PASS / FAIL / CRASH / TIMEOUT。
+5. **自动生成报告**：输出 Markdown 测试报告、失败用例 JSON，并可调用 LLM 分析失败原因。
 
-目标是实现一个 \*\*完整闭环的自动化测试工具\*\*，可用于课程实验、软件测试学习和 LLM 实践。
+目标是实现一个 **完整闭环的自动化测试工具**，可用于课程实验、软件测试学习和 LLM 实践。
 
 ---
 
 ## 二、目录结构
 
-\`\`\`
-LLM\_Testing\_Agent/
+```
+LLM_Testing_Agent/
 ├── main.py                    # 智能体入口
-├── llm\_agent.py               # 调用 DeepSeek API 模块
-├── code\_reader.py             # 读取源码模块
-├── test\_generator.py          # 自动生成测试用例模块
-├── test\_runner.py             # 执行测试模块
-├── result\_analyzer.py         # 判定测试结果模块
-├── report\_generator.py        # 生成报告模块
+├── llm_agent.py               # 调用 DeepSeek API 模块
+├── code_reader.py             # 读取源码模块
+├── test_generator.py          # 自动生成测试用例模块
+├── test_runner.py             # 执行测试模块
+├── result_analyzer.py         # 判定测试结果模块
+├── report_generator.py        # 生成报告模块
 ├── target/                    # 被测程序及测试接口
-│   ├── markdown2\_wrapper.py   # 被测程序封装
+│   ├── markdown2_wrapper.py   # 被测程序封装
 │   ├── tester.py              # 测试接口
 │   └── calculator.py          # 可选被测程序
-├── testcases/                 # 测试用例存放（可选，首次运行可空）
+├── testcases/                 # 测试用例存放（可选）
 └── results/                   # 运行结果文件夹
-\`\`\`
+```
 
 ---
 
@@ -43,26 +43,24 @@ LLM\_Testing\_Agent/
 
 - Python 3.9+
 - 依赖库：
-  \`\`\`bash
-  pip install openai markdown2
-  \`\`\`
-- DeepSeek API Key（可直接写入 \`llm\_agent.py\` 文件，或通过环境变量配置）
+```bash
+pip install openai markdown2
+```
+- DeepSeek API Key（可直接写入 `llm_agent.py` 文件，或通过环境变量配置）
 
 ---
 
 ## 四、快速运行
 
 1. 打开 VS Code 或终端，进入项目根目录：
-
-\`\`\`bash
-cd path/to/LLM\_Testing\_Agent
-\`\`\`
+```bash
+cd path/to/LLM_Testing_Agent
+```
 
 2. 运行智能体：
-
-\`\`\`bash
+```bash
 python main.py
-\`\`\`
+```
 
 3. 程序执行流程：
 
@@ -73,11 +71,11 @@ python main.py
 - 判定结果
 - 生成报告
 
-4. 运行完成后在 \`results/\` 文件夹查看输出：
+4. 运行完成后在 `results/` 文件夹查看输出：
 
-- \`report.md\`：测试报告
-- \`failed\_cases.json\`：失败用例
-- \`failure\_analysis.md\`：失败分析（可选）
+- `report.md`：测试报告
+- `failed_cases.json`：失败用例
+- `failure_analysis.md`：失败分析（可选）
 
 ---
 
@@ -85,14 +83,13 @@ python main.py
 
 - 测试用例由 LLM 自动生成
 - 输入示例：
-
-\`\`\`json
+```json
 {
-"input\_md": "# Hello World",
-"expected\_type": "normal",
-"purpose": "测试一级标题转换"
+  "input_md": "# Hello World",
+  "expected_type": "normal",
+  "purpose": "测试一级标题转换"
 }
-\`\`\`
+```
 
 - 覆盖：
   - 标题（#、## 等）
@@ -106,23 +103,22 @@ python main.py
 
 ## 六、模块说明
 
-
 | 模块                     | 功能                                                |
-| ------------------------ | --------------------------------------------------- |
-| \`main.py\`              | 智能体入口，整合所有模块，执行完整流程              |
-| \`llm\_agent.py\`        | 调用 DeepSeek API，实现分析、生成测试用例、失败分析 |
-| \`code\_reader.py\`      | 读取被测程序源码                                    |
-| \`test\_generator.py\`   | LLM 自动生成测试用例                                |
-| \`test\_runner.py\`      | 执行测试用例                                        |
-| \`result\_analyzer.py\`  | 判定 PASS / FAIL / CRASH / TIMEOUT                  |
-| \`report\_generator.py\` | 生成 Markdown 测试报告和失败用例                    |
-| \`target/\`              | 被测程序封装及测试接口                              |
+|---------------------------|---------------------------------------------------|
+| `main.py`                | 智能体入口，整合所有模块，执行完整流程              |
+| `llm_agent.py`            | 调用 DeepSeek API，实现分析、生成测试用例、失败分析 |
+| `code_reader.py`          | 读取被测程序源码                                    |
+| `test_generator.py`       | LLM 自动生成测试用例                                |
+| `test_runner.py`          | 执行测试用例                                        |
+| `result_analyzer.py`      | 判定 PASS / FAIL / CRASH / TIMEOUT                  |
+| `report_generator.py`     | 生成 Markdown 测试报告和失败用例                    |
+| `target/`                 | 被测程序封装及测试接口                              |
 
 ---
 
 ## 七、运行示例
 
-\`\`\`
+```
 [INFO] 软件测试智能体启动
 [INFO] 读取源码...
 [INFO] 调用 DeepSeek 分析源码...
@@ -133,32 +129,40 @@ python main.py
 [INFO] 生成测试报告...
 [INFO] 调用 DeepSeek 分析失败用例...
 [INFO] 软件测试智能体执行完成！
-\`\`\`
+```
 
 生成的报告示例：
 
-- \`report.md\`：
-
-\`\`\`
+```
 总测试用例数：30
 通过：25
 失败：5
 崩溃：0
 超时：0
-\`\`\`
+```
 
 ---
 
 ## 八、注意事项
 
 1. 确保 DeepSeek API Key 正确并可联网访问。
-2. 被测程序必须可用，测试接口 (\`tester.py\`) 需封装核心函数。
+2. 被测程序必须可用，测试接口 (`tester.py`) 需封装核心函数。
 3. LLM 生成的测试用例可能包含复杂 Markdown，需要测试程序能正确解析。
-4. 报告、失败用例和失败分析会自动生成在 \`results/\` 目录。
+4. 报告、失败用例和失败分析会自动生成在 `results/` 目录。
 
 ---
 
 ## 九、扩展与优化
 
+- 增加更多 Markdown 场景测试  
+- 保存历史失败用例用于回归测试  
+- LLM 失败分析可提供修复建议  
+- 可扩展为测试其他 Python 开源程序  
 
 ---
+
+## 十、作者与贡献
+
+- 开发者：团队成员  
+- 初步设计完成时间：2026/05/05  
+- 实验课程：软件测试课程设计性实验
