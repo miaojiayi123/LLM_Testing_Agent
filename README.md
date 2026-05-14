@@ -1,6 +1,6 @@
 # 软件测试智能体 (Software Testing Agent)
 
-本项目是一个基于 **DeepSeek LLM** 的软件测试智能体（Software Testing Agent），能够自动分析 Python 被测程序、生成测试用例、执行测试、判定结果，并生成测试报告。
+本项目是一个基于 **DeepSeek LLM** 的软件测试智能体（Software Testing Agent），用于自动测试本机安装的 `markdown2` 包本体。系统可自动分析源码、生成测试用例、执行多层测试、统计覆盖率并输出报告。
 
 ---
 
@@ -8,11 +8,12 @@
 
 智能体功能包括：
 
-1. **自动分析源码**：读取被测程序并调用 LLM 分析功能和接口。
-2. **自动生成测试用例**：覆盖正常输入、边界条件、异常输入。
-3. **自动执行测试用例**：通过统一接口调用被测程序。
-4. **自动判定结果**：根据执行结果判定 PASS / FAIL / CRASH / TIMEOUT。
-5. **自动生成报告**：输出 Markdown 测试报告、失败用例 JSON，并可调用 LLM 分析失败原因。
+1. **自动分析源码**：读取本机 `markdown2` 源码并调用 LLM 进行分析。
+2. **自动生成测试用例**：LLM 生成为主，内置规则兜底，避免流程中断。
+3. **多层自动执行**：同时执行单元层（函数调用）和集成层（CLI 子进程）测试。
+4. **自动判定结果**：给出单层判定、总判定及跨层输出一致性。
+5. **白盒覆盖率统计**：统计行覆盖率与分支覆盖率（依赖 `coverage.py`）。
+6. **自动生成报告**：输出 Markdown 报告与失败用例 JSON。
 
 目标是实现一个 **完整闭环的自动化测试工具**，可用于课程实验、软件测试学习和 LLM 实践。
 
@@ -29,11 +30,13 @@ LLM_Testing_Agent/
 ├── test_runner.py             # 执行测试模块
 ├── result_analyzer.py         # 判定测试结果模块
 ├── report_generator.py        # 生成报告模块
+├── whitebox_analyzer.py       # 白盒覆盖率采集模块
+├── requirements.txt           # 依赖清单
+├── 实验报告.md                # 课程实验说明文档（根目录）
 ├── target/                    # 被测程序及测试接口
 │   ├── markdown2_wrapper.py   # 被测程序封装
 │   ├── tester.py              # 测试接口
-│   └── calculator.py          # 可选被测程序
-├── testcases/                 # 测试用例存放（可选）
+│   └── __init__.py
 └── results/                   # 运行结果文件夹
 ```
 
@@ -92,18 +95,18 @@ pip install coverage
 
 3. 程序执行流程：
 
-- 读取被测程序源码
-- 调用 DeepSeek 分析功能
-- 自动生成测试用例
-- 执行测试用例
-- 判定结果
+- 读取本机 `markdown2` 源码
+- 调用 DeepSeek 分析功能（不可用时继续执行）
+- 自动生成测试用例（失败时回退兜底用例）
+- 执行单元层 + 集成层测试
+- 判定结果并检查跨层一致性
+- 统计白盒覆盖率（行/分支）
 - 生成报告
 
 4. 运行完成后在 `results/` 文件夹查看输出：
 
 - `report.md`：测试报告
 - `failed_cases.json`：失败用例
-- `failure_analysis.md`：失败分析（可选）
 
 ---
 
@@ -125,7 +128,7 @@ pip install coverage
   - 列表（有序、无序）
   - 代码块与行内代码
   - 链接、加粗、斜体
-  - 空输入、非法输入
+  - 空输入、特殊字符
   - 综合 Markdown 场景
 
 ---
@@ -139,9 +142,10 @@ pip install coverage
 | `code_reader.py`      | 读取被测程序源码                                    |
 | `test_generator.py`   | LLM 自动生成测试用例                                |
 | `test_runner.py`      | 执行测试用例                                        |
-| `result_analyzer.py`  | 判定 PASS / FAIL / CRASH / TIMEOUT                  |
-| `report_generator.py` | 生成 Markdown 测试报告和失败用例                    |
-| `target/`             | 被测程序封装及测试接口                              |
+| `result_analyzer.py`  | 多层判定与一致性分析（unit / integration / overall） |
+| `whitebox_analyzer.py`| 白盒覆盖率采集（行/分支）                            |
+| `report_generator.py` | 生成 Markdown 测试报告和失败用例                     |
+| `target/`             | 对本机 `markdown2` 的调用封装与测试接口              |
 
 ---
 
@@ -149,25 +153,25 @@ pip install coverage
 
 ```
 [INFO] 软件测试智能体启动
+[INFO] 被测对象: markdown2 x.y.z
 [INFO] 读取源码...
 [INFO] 调用 DeepSeek 分析源码...
 [INFO] 调用 DeepSeek 自动生成测试用例...
-[INFO] 执行测试用例...
-[INFO] 用例 #1 执行完成，判定: PASS
-[INFO] 用例 #2 执行完成，判定: FAIL
+[INFO] 执行测试用例（多层）...
+[INFO] 用例 #1 执行完成，判定: PASS (unit=PASS, integration=PASS)
+[INFO] 采集白盒覆盖率（行/分支）...
 [INFO] 生成测试报告...
-[INFO] 调用 DeepSeek 分析失败用例...
 [INFO] 软件测试智能体执行完成！
 ```
 
 生成的报告示例：
 
 ```
-总测试用例数：30
-通过：25
-失败：5
-崩溃：0
-超时：0
+测试用例总数：N
+通过用例：A
+失败用例：B
+行覆盖率：X%
+分支覆盖率：Y%
 ```
 
 ---
@@ -175,8 +179,8 @@ pip install coverage
 ## 八、注意事项
 
 1. 确保 DeepSeek API Key 正确并可联网访问。
-2. 被测程序必须可用，测试接口 (`tester.py`) 需封装核心函数。
-3. LLM 生成的测试用例可能包含复杂 Markdown，需要测试程序能正确解析。
-4. 报告、失败用例和失败分析会自动生成在 `results/` 目录。
+2. 被测对象为本机安装的 `markdown2` 包，请确认环境可正常导入 `markdown2`。
+3. 若网络不可用或 LLM 调用失败，系统会自动回退兜底用例继续执行。
+4. 报告与失败用例会生成在 `results/` 目录；课程说明文档在根目录 `实验报告.md`。
 
 ---
