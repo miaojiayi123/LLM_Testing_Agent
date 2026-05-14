@@ -43,20 +43,27 @@ LLM_Testing_Agent/
 
 - Python 3.9+
 - 依赖库：
+
 ```bash
 pip install -r requirements.txt
 ```
+
 - 如需手动安装（等价）：
+
 ```bash
 pip install openai markdown2 python-dotenv coverage
 ```
+
 - DeepSeek API Key（推荐通过 `.env` 配置）
 
 推荐 `.env` 配置方式：
+
 ```bash
 cp .env.example .env
 ```
+
 然后编辑 `.env`：
+
 ```env
 DEEPSEEK_API_KEY=你的DeepSeekKey
 ```
@@ -66,16 +73,19 @@ DEEPSEEK_API_KEY=你的DeepSeekKey
 ## 四、快速运行
 
 1. 打开 VS Code 或终端，进入项目根目录：
+
 ```bash
 cd path/to/LLM_Testing_Agent
 ```
 
 2. 运行智能体：
+
 ```bash
 python main.py
 ```
 
 若报告中的白盒覆盖率显示 `disabled`，请确认已安装 `coverage`：
+
 ```bash
 pip install coverage
 ```
@@ -101,6 +111,7 @@ pip install coverage
 
 - 测试用例由 LLM 自动生成
 - 输入示例：
+
 ```json
 {
   "input_md": "# Hello World",
@@ -121,16 +132,16 @@ pip install coverage
 
 ## 六、模块说明
 
-| 模块                     | 功能                                                |
-|---------------------------|---------------------------------------------------|
-| `main.py`                | 智能体入口，整合所有模块，执行完整流程              |
-| `llm_agent.py`            | 调用 DeepSeek API，实现分析、生成测试用例、失败分析 |
-| `code_reader.py`          | 读取被测程序源码                                    |
-| `test_generator.py`       | LLM 自动生成测试用例                                |
-| `test_runner.py`          | 执行测试用例                                        |
-| `result_analyzer.py`      | 判定 PASS / FAIL / CRASH / TIMEOUT                  |
-| `report_generator.py`     | 生成 Markdown 测试报告和失败用例                    |
-| `target/`                 | 被测程序封装及测试接口                              |
+| 模块                    | 功能                                                |
+| ----------------------- | --------------------------------------------------- |
+| `main.py`             | 智能体入口，整合所有模块，执行完整流程              |
+| `llm_agent.py`        | 调用 DeepSeek API，实现分析、生成测试用例、失败分析 |
+| `code_reader.py`      | 读取被测程序源码                                    |
+| `test_generator.py`   | LLM 自动生成测试用例                                |
+| `test_runner.py`      | 执行测试用例                                        |
+| `result_analyzer.py`  | 判定 PASS / FAIL / CRASH / TIMEOUT                  |
+| `report_generator.py` | 生成 Markdown 测试报告和失败用例                    |
+| `target/`             | 被测程序封装及测试接口                              |
 
 ---
 
@@ -169,5 +180,3 @@ pip install coverage
 4. 报告、失败用例和失败分析会自动生成在 `results/` 目录。
 
 ---
-
-## 九、扩展与优化
