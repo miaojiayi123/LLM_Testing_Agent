@@ -1,5 +1,15 @@
 # target/markdown2_wrapper.py
-import markdown2
+import inspect
+
+import markdown2  # type: ignore
+
+
+def get_markdown2_info() -> dict:
+    return {
+        "module_path": getattr(markdown2, "__file__", ""),
+        "source_path": inspect.getsourcefile(markdown2) or "",
+        "version": getattr(markdown2, "__version__", "unknown"),
+    }
 
 def convert_md_to_html(md_text: str) -> str:
     """
@@ -9,8 +19,7 @@ def convert_md_to_html(md_text: str) -> str:
         - 如果输入错误，则抛出异常
     """
     try:
-        # 解析 markdown，带 extras（例如代码高亮等）
-        html = markdown2.markdown(md_text, extras=["fenced-code-blocks"])
-        return html
+        # 始终调用本机安装的 markdown2 包本体
+        return markdown2.markdown(md_text, extras=["fenced-code-blocks"])
     except Exception as e:
         raise e

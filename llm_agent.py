@@ -1,16 +1,31 @@
 # llm_agent.py
+import os
 from openai import OpenAI
 
+try:
+    from dotenv import load_dotenv
+except Exception:
+    load_dotenv = None
 
-API_KEY = "sk-9f925d4c71924125b038269fc9c1de27"
+if load_dotenv is not None:
+    load_dotenv()
 
-# 初始化 DeepSeek 客户端
-client = OpenAI(
-    api_key=API_KEY,
-    base_url="https://api.deepseek.com"
-)
 
-def ask_llm(prompt: str, model: str = "deepseek-v4-pro", temperature: float = 0.3) -> str:
+def _build_client():
+    api_key = os.getenv("DEEPSEEK_API_KEY", "").strip()
+    if not api_key:
+        return None
+    return OpenAI(api_key=api_key, base_url="https://api.deepseek.com")
+
+
+client = _build_client()
+
+def ask_llm(
+    prompt: str,
+    model: str = "deepseek-v4-pro",
+    temperature: float = 0.3,
+    enable_thinking: bool = True,
+) -> str:
     """
     调用 DeepSeek API 返回 LLM 响应
     
@@ -22,8 +37,12 @@ def ask_llm(prompt: str, model: str = "deepseek-v4-pro", temperature: float = 0.
     返回:
     - LLM 生成文本
     """
+    if client is None:
+        print("[WARN] 未检测到 DEEPSEEK_API_KEY，跳过 LLM 调用")
+        return ""
+
     try:
-        response = client.chat.completions.create(
+        request_kwargs = dict(
             model=model,
             messages=[
                 {"role": "system", "content": "你是专业的软件测试智能体，擅长分析 Python 程序并生成测试用例和测试策略。"},
@@ -31,8 +50,12 @@ def ask_llm(prompt: str, model: str = "deepseek-v4-pro", temperature: float = 0.
             ],
             stream=False,                     # 非流式输出
             reasoning_effort="high",          # 高推理模式
-            extra_body={"thinking": {"type": "enabled"}}  # 启用思考模式
+            temperature=temperature,
         )
+        if enable_thinking:
+            request_kwargs["extra_body"] = {"thinking": {"type": "enabled"}}
+
+        response = client.chat.completions.create(**request_kwargs)
         # 返回 LLM 生成文本
         return response.choices[0].message.content
     except Exception as e:

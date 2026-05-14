@@ -1,261 +1,84 @@
 # 软件测试智能体实验报告
 
+## 零、被测对象信息
+- 被测包: markdown2
+- 版本: 2.5.5
+- 模块路径: /opt/homebrew/anaconda3/lib/python3.12/site-packages/markdown2.py
+- 源码路径: /opt/homebrew/anaconda3/lib/python3.12/site-packages/markdown2.py
+
 ## 一、测试统计
-- 测试用例总数: 30
-- 通过用例: 11
-- 失败用例: 0
-- 崩溃用例: 19
+- 测试用例总数: 10
+- 通过用例: 9
+- 失败用例: 1
+- 崩溃用例: 0
 - 超时用例: 0
 
-## 二、失败用例详情
+## 二、方法与层级统计
+- 已启用测试方法: 黑盒断言 + 白盒覆盖率
+- 已启用测试层级: 单元测试（函数调用） + 集成测试（子进程CLI）
+- 单元层通过数: 10/10
+- 集成层通过数: 10/10
+- 跨层输出一致用例数: 9/10
+
+## 三、白盒覆盖率
+- 覆盖率采集状态: enabled
+- 覆盖率说明: ok
+- 行覆盖率: 23.43%
+- 分支覆盖率: 23.13%
+- 覆盖源码: /opt/homebrew/anaconda3/lib/python3.12/site-packages/markdown2.py
+
+## 四、失败用例详情
 ```json
 [
   {
     "case": {
-      "expression": "1+2",
+      "input_md": "```python\nprint('x')\n```",
       "expected_type": "normal",
-      "purpose": "基本加法"
+      "must_contain": [
+        "<code",
+        "print"
+      ],
+      "purpose": "围栏代码块"
     },
     "result": {
-      "stdout": "",
-      "stderr": "module 'target.tester' has no attribute 'run_expression'",
-      "status": "error"
+      "unit": {
+        "stdout": "<div class=\"codehilite\">\n<pre><span></span><code><span class=\"nb\">print</span><span class=\"p\">(</span><span class=\"s1\">&#39;x&#39;</span><span class=\"p\">)</span>\n</code></pre>\n</div>\n",
+        "stderr": "",
+        "status": "finished"
+      },
+      "integration": {
+        "stdout": "<p><code>python\nprint('x')\n</code></p>\n",
+        "stderr": "",
+        "status": "finished"
+      }
     },
-    "judge": "CRASH"
-  },
-  {
-    "case": {
-      "expression": "3-1",
-      "expected_type": "normal",
-      "purpose": "基本减法"
-    },
-    "result": {
-      "stdout": "",
-      "stderr": "module 'target.tester' has no attribute 'run_expression'",
-      "status": "error"
-    },
-    "judge": "CRASH"
-  },
-  {
-    "case": {
-      "expression": "2*3",
-      "expected_type": "normal",
-      "purpose": "基本乘法"
-    },
-    "result": {
-      "stdout": "",
-      "stderr": "module 'target.tester' has no attribute 'run_expression'",
-      "status": "error"
-    },
-    "judge": "CRASH"
-  },
-  {
-    "case": {
-      "expression": "6/2",
-      "expected_type": "normal",
-      "purpose": "基本除法"
-    },
-    "result": {
-      "stdout": "",
-      "stderr": "module 'target.tester' has no attribute 'run_expression'",
-      "status": "error"
-    },
-    "judge": "CRASH"
-  },
-  {
-    "case": {
-      "expression": "2.5+1.5",
-      "expected_type": "normal",
-      "purpose": "小数加法"
-    },
-    "result": {
-      "stdout": "",
-      "stderr": "module 'target.tester' has no attribute 'run_expression'",
-      "status": "error"
-    },
-    "judge": "CRASH"
-  },
-  {
-    "case": {
-      "expression": "3.14*2",
-      "expected_type": "normal",
-      "purpose": "小数乘法"
-    },
-    "result": {
-      "stdout": "",
-      "stderr": "module 'target.tester' has no attribute 'run_expression'",
-      "status": "error"
-    },
-    "judge": "CRASH"
-  },
-  {
-    "case": {
-      "expression": "-3+2",
-      "expected_type": "normal",
-      "purpose": "负数作为操作数"
-    },
-    "result": {
-      "stdout": "",
-      "stderr": "module 'target.tester' has no attribute 'run_expression'",
-      "status": "error"
-    },
-    "judge": "CRASH"
-  },
-  {
-    "case": {
-      "expression": "4*-2",
-      "expected_type": "normal",
-      "purpose": "负数乘法"
-    },
-    "result": {
-      "stdout": "",
-      "stderr": "module 'target.tester' has no attribute 'run_expression'",
-      "status": "error"
-    },
-    "judge": "CRASH"
-  },
-  {
-    "case": {
-      "expression": "(1+2)*3",
-      "expected_type": "normal",
-      "purpose": "括号影响优先级"
-    },
-    "result": {
-      "stdout": "",
-      "stderr": "module 'target.tester' has no attribute 'run_expression'",
-      "status": "error"
-    },
-    "judge": "CRASH"
-  },
-  {
-    "case": {
-      "expression": "1+(2*3)",
-      "expected_type": "normal",
-      "purpose": "括号结合运算"
-    },
-    "result": {
-      "stdout": "",
-      "stderr": "module 'target.tester' has no attribute 'run_expression'",
-      "status": "error"
-    },
-    "judge": "CRASH"
-  },
-  {
-    "case": {
-      "expression": "(2.5+1.5)*(3-2)",
-      "expected_type": "normal",
-      "purpose": "小数与括号组合"
-    },
-    "result": {
-      "stdout": "",
-      "stderr": "module 'target.tester' has no attribute 'run_expression'",
-      "status": "error"
-    },
-    "judge": "CRASH"
-  },
-  {
-    "case": {
-      "expression": "10/3",
-      "expected_type": "normal",
-      "purpose": "非整除结果"
-    },
-    "result": {
-      "stdout": "",
-      "stderr": "module 'target.tester' has no attribute 'run_expression'",
-      "status": "error"
-    },
-    "judge": "CRASH"
-  },
-  {
-    "case": {
-      "expression": "2+3*4-1",
-      "expected_type": "normal",
-      "purpose": "运算符优先级验证"
-    },
-    "result": {
-      "stdout": "",
-      "stderr": "module 'target.tester' has no attribute 'run_expression'",
-      "status": "error"
-    },
-    "judge": "CRASH"
-  },
-  {
-    "case": {
-      "expression": "0-5",
-      "expected_type": "normal",
-      "purpose": "零减正数"
-    },
-    "result": {
-      "stdout": "",
-      "stderr": "module 'target.tester' has no attribute 'run_expression'",
-      "status": "error"
-    },
-    "judge": "CRASH"
-  },
-  {
-    "case": {
-      "expression": "1/1",
-      "expected_type": "normal",
-      "purpose": "除法结果为一"
-    },
-    "result": {
-      "stdout": "",
-      "stderr": "module 'target.tester' has no attribute 'run_expression'",
-      "status": "error"
-    },
-    "judge": "CRASH"
-  },
-  {
-    "case": {
-      "expression": "2 * (3 + 4)",
-      "expected_type": "normal",
-      "purpose": "带空格的表达式"
-    },
-    "result": {
-      "stdout": "",
-      "stderr": "module 'target.tester' has no attribute 'run_expression'",
-      "status": "error"
-    },
-    "judge": "CRASH"
-  },
-  {
-    "case": {
-      "expression": "((1+2)*3)",
-      "expected_type": "normal",
-      "purpose": "多层嵌套括号"
-    },
-    "result": {
-      "stdout": "",
-      "stderr": "module 'target.tester' has no attribute 'run_expression'",
-      "status": "error"
-    },
-    "judge": "CRASH"
-  },
-  {
-    "case": {
-      "expression": "-3.14*2/(1-2)",
-      "expected_type": "normal",
-      "purpose": "负数小数复杂表达式"
-    },
-    "result": {
-      "stdout": "",
-      "stderr": "module 'target.tester' has no attribute 'run_expression'",
-      "status": "error"
-    },
-    "judge": "CRASH"
-  },
-  {
-    "case": {
-      "expression": "(1+2)*(3/(4-2))",
-      "expected_type": "normal",
-      "purpose": "嵌套括号与除法"
-    },
-    "result": {
-      "stdout": "",
-      "stderr": "module 'target.tester' has no attribute 'run_expression'",
-      "status": "error"
-    },
-    "judge": "CRASH"
+    "judge": "FAIL",
+    "judge_detail": {
+      "overall": "FAIL",
+      "unit": "PASS",
+      "integration": "PASS",
+      "outputs_consistent": false
+    }
   }
 ]
 ```
+
+## 五、失败原因分析与改进建议
+### 失败原因分析（本地规则）
+
+#### 失败用例 #1
+- 判定结果: FAIL
+- 测试目的: 围栏代码块
+- 输入摘要: ```python
+print('x')
+```
+- 根因分类: 测试可观测性不足
+- 影响范围: 中（影响定位效率）
+- 修复优先级: P2（常规）
+- 建议负责人: 测试框架负责人
+- 单元层判定: PASS
+- 集成层判定: PASS
+- 跨层输出一致性: False
+- 集成层错误信息: 
+- 失败原因: 输出与断言不一致，但未定位到明确缺失片段。
+- 改进建议: 增加更细粒度断言与日志，定位具体转换差异。

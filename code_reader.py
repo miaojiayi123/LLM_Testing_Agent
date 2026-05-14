@@ -1,10 +1,23 @@
 # code_reader.py
+import inspect
+
+
+def _get_markdown2_source_path() -> str:
+    try:
+        import markdown2  # type: ignore
+        return inspect.getsourcefile(markdown2) or getattr(markdown2, "__file__", "")
+    except Exception as e:
+        print(f"读取 markdown2 本体路径失败: {e}")
+        return ""
+
+
 def read_code_files(files=None) -> str:
     """
     读取被测程序源码，用于 LLM 分析
     """
     if files is None:
-        files = ["target/calculator.py"]
+        source_path = _get_markdown2_source_path()
+        files = [source_path, "target/tester.py"] if source_path else ["target/tester.py"]
     content = ""
     for file in files:
         try:

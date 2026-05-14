@@ -44,9 +44,22 @@ LLM_Testing_Agent/
 - Python 3.9+
 - 依赖库：
 ```bash
-pip install openai markdown2
+pip install -r requirements.txt
 ```
-- DeepSeek API Key（可直接写入 `llm_agent.py` 文件，或通过环境变量配置）
+- 如需手动安装（等价）：
+```bash
+pip install openai markdown2 python-dotenv coverage
+```
+- DeepSeek API Key（推荐通过 `.env` 配置）
+
+推荐 `.env` 配置方式：
+```bash
+cp .env.example .env
+```
+然后编辑 `.env`：
+```env
+DEEPSEEK_API_KEY=你的DeepSeekKey
+```
 
 ---
 
@@ -60,6 +73,11 @@ cd path/to/LLM_Testing_Agent
 2. 运行智能体：
 ```bash
 python main.py
+```
+
+若报告中的白盒覆盖率显示 `disabled`，请确认已安装 `coverage`：
+```bash
+pip install coverage
 ```
 
 3. 程序执行流程：
@@ -153,5 +171,3 @@ python main.py
 ---
 
 ## 九、扩展与优化
-
-
